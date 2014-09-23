@@ -1,0 +1,17 @@
+{
+  "name": "tessel",
+  "version": "0.0.0",
+  "description": "",
+  "main": "accelerometer.js",
+  "dependencies": {
+    "accel-mma84": "^0.2.3",
+    "nodejs-websocket": "^1.0.0",
+    "tessel": "*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

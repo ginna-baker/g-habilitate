@@ -1,0 +1,17 @@
+{
+  "name": "tessel_proj",
+  "version": "0.0.0",
+  "description": "",
+  "main": "test-client.js",
+  "dependencies": {
+    "express": "^4.9.4",
+    "nodejs-websocket": "^1.0.0",
+    "tessel": "^0.3.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

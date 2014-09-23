@@ -1,0 +1,21 @@
+{
+  "name": "test",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "hardware": {
+    "./": false,
+    "./src/index.js": "./hardware-src/index.js",
+    "*": false,
+    "async": true
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "~0.2.10",
+    "colors": "~0.6.2"
+  }
+}
