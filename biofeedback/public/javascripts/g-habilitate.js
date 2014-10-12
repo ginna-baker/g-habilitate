@@ -6,6 +6,7 @@ function gHabilitate(canvasId, borderPadding, moveSensitivity) {
   this._context;
   this._moveBall;
   this._targetBall;
+  this._prevCoordinates;
 
   // TODO : Proof of concept.
   this._snake = false;
@@ -135,9 +136,14 @@ gHabilitate.prototype._clear = function() {
 
 // TODO : Test this functionality.
 // e.g. newCoordinates = { x : 1, y : 10, z : 3 };
-gHabilitate.prototype.moveBall = function(newCoordinates) {
-  var xChange = (+this._moveBall.x) + (+newCoordinates.x);
-  var yChange = (+this._moveBall.y) + (+newCoordinates.y);
+gHabilitate.prototype.moveBall = function(currentCoordinates) {
+  if(this._prevCoordinates === undefined) {
+    this._prevCoordinates = currentCoordinates;
+  }
+
+  var newX = (+this._prevCoordinates.x) + (+currentCoordinates.x);
+  var newY = (+this._prevCoordinates.y) + (+currentCoordinates.y);
+
   if(newY > 0) { this.moveUp(); }
   if(newY < 0) { this.moveDown(); }
   if(newX < 0) { this.moveLeft(); }
@@ -150,16 +156,6 @@ function Ball(x, y, radius, color) {
   this.radius = radius;
   this.color = color;
 }
-
-// $(function(){
-//  var socket = io.connect();
-//    socket.on('data', function (data) {
-//      // console.log(data);
-//      var obj = JSON.parse(data);
-//      mv(obj);
-//      draw();
-// ;
-// });
 
 //#####################################################################
 // $(function(){

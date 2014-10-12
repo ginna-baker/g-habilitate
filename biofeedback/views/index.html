@@ -17,6 +17,14 @@
     console.log( "Document ready!" );
     var ghabilitate = new gHabilitate('canvas', 1);
     ghabilitate.init();
+
+    // $(function(){
+    var socket = io.connect();
+    socket.on('data', function (data) {
+      console.log(data);
+      var obj = JSON.parse(data);
+      ghabilitate.moveBall(obj);
+    });
   });
 
 </script>
