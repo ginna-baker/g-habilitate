@@ -6,6 +6,9 @@ function gHabilitate(canvasId, borderPadding, moveSensitivity) {
   this._context;
   this._moveBall;
   this._targetBall;
+
+  // TODO : Proof of concept.
+  this._snake = false;
 }
 
 gHabilitate.prototype.init = function() {
@@ -20,12 +23,21 @@ gHabilitate.prototype.init = function() {
   this._targetBall = new Ball(midPointX, midPointY, 10, 'green'); // TODO: Hard coded values?
 
   // Listen for when the user presses a key down
-  window.addEventListener("keydown", this._keyDownHandler, true);
+  var that = this;
+  window.addEventListener("keydown", function(event) {
+    that._keyDownHandler(event);
+  }, true);
 
   this.draw();
 };
 
 gHabilitate.prototype.draw = function() {
+  // Test.
+  if(!this._snake) {
+    this._clear();
+  }
+  // Original.
+  // this._clear();
   this._drawWalls();
   this._drawBalls();
 };
@@ -36,21 +48,56 @@ gHabilitate.prototype._drawBalls = function() {
   this._drawBall(this._moveBall);
 };
 
-gHabilitate.prototype.moveUp = function() {
-  console.log('Moving Up');
-  // Move the ball 1 up by subtracting 1 from y
-  this._moveBall.y -= this._moveSensitivity;
-  var ballTopEdge = this._moveBall.y - this._moveBall.radius;
-  if(ballTopEdge <= this._borderPadding){
-    // Keep the ball from moving through the top wall
-    this._moveBall.y = this._borderPadding + this._moveBall.radius;
+gHabilitate.prototype._moveBallOnCanvas = function(moveDirection) {
+  // console.log('Moving: ' + moveDirection);
+  var x_or_y = (moveDirection === 'Up' || moveDirection === 'Down') ? 'y' : 'x';
+  if(moveDirection === 'Up' || moveDirection === 'Left') {
+    // Move the ball up or left by subtracting the moveSensitivity from the axis.
+    this._moveBall[x_or_y] -= this._moveSensitivity;
+    // Calculate the edge of the ball.
+    var ballEdge = this._moveBall[x_or_y] - this._moveBall.radius;
+    if(ballEdge <= this._borderPadding) {
+      // Keep the ball from moving off the area (over the border);
+      this._moveBall[x_or_y] = this._borderPadding + this._moveBall.radius;
+      // console.log('Hit wall/edge: ' + moveDirection);
+    }
+  } else {
+    // Move the ball down or right by adding the moveSensitivity to the axis.
+    this._moveBall[x_or_y] += this._moveSensitivity;
+    // Calculate the edge of the ball.
+    var ballEdge = this._moveBall[x_or_y] + this._moveBall.radius;
+
+    // Calculate the wall;
+    var edge = (((x_or_y === 'x') ? this._canvasWidth : this._canvasHeight) - (this._borderPadding * 2));
+
+    if(ballEdge >= edge){
+      // Keep the ball from moving off the area (over the border);
+      this._moveBall[x_or_y] = edge - this._moveBall.radius;
+      // console.log('Hit wall/edge: ' + moveDirection);
+    }
   }
+
+  this.draw();
+};
+
+gHabilitate.prototype.moveUp = function() {
+  this._moveBallOnCanvas('Up');
+};
+
+gHabilitate.prototype.moveLeft = function() {
+  this._moveBallOnCanvas('Left');
+};
+
+gHabilitate.prototype.moveDown = function() {
+  this._moveBallOnCanvas('Down');
+};
+
+gHabilitate.prototype.moveRight = function() {
+  this._moveBallOnCanvas('Right');
 };
 
 gHabilitate.prototype._keyDownHandler = function(event) {
   var pressedKey = event.which;
-
-  console.log(event);
 
   if(pressedKey > 46) { return; } // Let keypress handle displayable characters
 
@@ -63,9 +110,6 @@ gHabilitate.prototype._keyDownHandler = function(event) {
       return; // Quit without doing anything else. (e.g. draw)
     break;
   }
-
-  // redraw everything
-  this.draw();
 };
 
 gHabilitate.prototype._drawWalls = function() {
@@ -86,7 +130,18 @@ gHabilitate.prototype._drawBall = function(ball) {
 
 // Clear the canvas for the next frame.
 gHabilitate.prototype._clear = function() {
-  this._context.clearRect(0, 0, this._canvasWidth, canvas.this._canvasHeight);
+  this._context.clearRect(0, 0, this._canvasWidth, this._canvasHeight);
+};
+
+// TODO : Test this functionality.
+// e.g. newCoordinates = { x : 1, y : 10, z : 3 };
+gHabilitate.prototype.moveBall = function(newCoordinates) {
+  var xChange = (+this._moveBall.x) + (+newCoordinates.x);
+  var yChange = (+this._moveBall.y) + (+newCoordinates.y);
+  if(newY > 0) { this.moveUp(); }
+  if(newY < 0) { this.moveDown(); }
+  if(newX < 0) { this.moveLeft(); }
+  if(newY > 0) { this.moveRight(); }
 };
 
 function Ball(x, y, radius, color) {
@@ -97,88 +152,14 @@ function Ball(x, y, radius, color) {
 }
 
 // $(function(){
-
-//     ctx.strokeStyle="blue";
-//     ctx.fillStyle="red";
-
-//     draw();
-
-//     function moveLeft() {
-//       // console.log('Moving Left');
-//        ballX -= moveSensitivity;// move the ball 1 left by subtracting 1 from ballX
-//       var ballLeft=ballX-ballRadius;// calc the ball's left edge
-//       if(ballLeft<=leftWall){
-//         ballX=leftWall+ballRadius; // Keep the ball from moving through the left wall
-//         // console.log('Hit Left Wall');
-//         }
-//     }
-
-//     function moveRight() {
-//       // console.log('Moving Right');
-//       ballX += moveSensitivity;// move the ball 1 right by adding 1 to ballX
-//       var ballRight=ballX+ballRadius;// calc the ball's right edge
-//       if(ballRight>=rightWall){
-//         ballX=rightWall-ballRadius; // Keep the ball from moving through the right wall
-//         // console.log('Hit Rigth Wall');
-//         }
-//     }
-
-//     function moveDown(){
-//       // console.log('Moving Down');
-//       ballY += moveSensitivity;// move the ball 1 bottom by adding 1 to ballY
-//       var ballBot=ballY+ballRadius;// calc the ball's right edge
-//       if(ballBot>=bottomWall){
-//         ballY=bottomWall-ballRadius; // Keep the ball from moving through the right wall
-//         // console.log('Hit Bottom Wall');
-//         }
-//     }
-
-
-
-//     var prev;
-//     // {x:1, y:10: z: 3}
-//     function mv(curr) {
-//       if(prev === undefined) {
-//         prev = curr;
-//       }
-
-//       var newX = (+prev.x) + (+curr.x);
-//       var newY = (+prev.y) + (+curr.y);
-//       // console.log(newX + " : " + newY)
-
-//       if(newY > 0) {
-//         moveUp();
-//       }
-
-//       if(newY < 0) {
-//         moveDown();
-//       }
-
-//       if(newX < 0) {
-//         moveLeft();
-//       }
-
-//       if(newY > 0) {
-//         moveRight();
-//       }
-//     }
-
-
 //  var socket = io.connect();
 //    socket.on('data', function (data) {
 //      // console.log(data);
 //      var obj = JSON.parse(data);
 //      mv(obj);
 //      draw();
-
 // ;
-// // console.log(obj);
-// // console.log(obj.x);
 // });
-
-
-//
-// }); // end $(function(){});
 
 //#####################################################################
 // $(function(){
