@@ -9,7 +9,7 @@ console.log("it's working!");
 ws.setBinaryFragmentation(1);
 
 // When we get a connection
-var connection = ws.connect('ws://192.168.1.51:' + port, function() {
+var connection = ws.connect('ws://192.168.1.254:' + port, function() {
   // Create a new stream
   // var socketStream = connection.beginBinary();
 
@@ -24,8 +24,8 @@ accel.setOutputRate(1.8, function() {
         ex.y = xyz[1].toFixed(2);
         // ex.z = xyz[2].toFixed(2);
         var val = JSON.stringify(ex);
-      // console.log(val);
-      connection.sendText(val);
+        console.log(val);
+        connection.sendText(val);
       });
       // accel.pipe(socketStream);
 
