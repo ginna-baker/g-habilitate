@@ -15,14 +15,15 @@
 <script>
   $( document ).ready(function() {
     console.log( "Document ready!" );
-    var ghabilitate = new gHabilitate('canvas', 1);
+    var ghabilitate = new gHabilitate('canvas', 5, 5);
     ghabilitate.init();
 
     // $(function(){
     var socket = io.connect();
     socket.on('data', function (data) {
       console.log(data);
-      var obj = JSON.parse(data);
+      var obj = data;
+      // console.log(obj)
       ghabilitate.moveBall(obj);
     });
   });
