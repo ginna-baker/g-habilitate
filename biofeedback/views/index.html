@@ -1,42 +1,74 @@
-<!doctype html>
-<html>
-<head>
-<link rel="stylesheet" type="text/css" media="all" href="css/reset.css" /> <!-- reset css -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
-<!-- LINK TO LOCAL PROJECT? -->
-<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+    <title>gHabilitate</title>
 
-<link rel="stylesheet" type="text/css" href="stylesheets/g-habilitate.css">
-<script type="text/javascript" src="javascripts/g-habilitate.js"></script>
-<script src="/socket.io/socket.io.js"></script>
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/starter-template.css" rel="stylesheet">
+    <link href="stylesheets/g-habilitate.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">gHabilitate</a>
+        </div>
+        <!-- <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div> --><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <canvas id="canvas"></canvas>
+      <input id="moveSensitivitySlider" type="range" name="points" min="1" max="20" value="5">
+
+    </div><!-- /.container -->
 
 
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="javascripts/jquery/1.11.1/jquery.min.js"></script>
+    <script src="javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="javascripts/g-habilitate.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      $( document ).ready(function() {
 
-<script>
-  $( document ).ready(function() {
-    console.log( "Document ready!" );
-    var ghabilitate = new gHabilitate('canvas', 5, 5);
-    ghabilitate.init();
+        var ghabilitate = new gHabilitate('canvas', 5, 5);
+        ghabilitate.init();
 
-    // $(function(){
-    var socket = io.connect();
-    socket.on('data', function (data) {
-      console.log(data);
-      var obj = data;
-      // console.log(obj)
-      ghabilitate.moveBall(obj);
-    });
-  });
+        $("#moveSensitivitySlider").on("input", function(){
+          ghabilitate.setMoveSensitivity(this.value);
+        });
 
-</script>
+        var socket = io.connect();
+        socket.on('data', function (data) {
+          ghabilitate.moveBall(data);
+        });
 
-</head>
-
-<body>
-  <div class="container">
-    <p></p>
-    <p></p>
-    <canvas id="canvas"></canvas>
-  </div>
-</body>
+      });
+    </script>
+  </body>
 </html>

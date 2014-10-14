@@ -10,14 +10,13 @@ var users = require('./routes/users');
 var http = require('http');
 
 var app = express();
-var port = 8000;
 
-
+// gHabilitate code.
+// #########################################################################
+// Get machine IP address. For conveniece if it needs to be set on tessel.
+console.log(require('os').networkInterfaces().en0[1].address);
 var net = require('net');
-// get machine IP address
-var IP = require('os').networkInterfaces().en0[1].address;
 var netPORT = 7999;
-console.log(IP);
 
 var server = net.createServer(function(socket) {
   socket.on('data', function(data) {
@@ -31,43 +30,7 @@ var server = net.createServer(function(socket) {
 });
 
 server.listen(7999);
-
-// console.log('a listening on IP: ' + IP);
-// var ws = require("nodejs-websocket")
-
-// // Create the websocket server, provide connection callback
-// var server = ws.createServer(function (conn) {
-//   // console.log("New connection");
-
-//   // When we get an incoming stream, pipe it to stdout
-//   conn.on("text", function(stream) {
-//     // stream.pipe(process.stdout);
-//      console.log(stream);
-//     io.sockets.emit('data', stream);
-//   });
-
-//   conn.on("data", function(data) {
-//     // stream.pipe(process.stdout);
-//      console.log('data', data);
-//     // io.sockets.emit('data', stream);
-//   });
-
-//   conn.on("stream", function(stream) {
-//     // stream.pipe(process.stdout);
-//      console.log('stream', stream);
-//     // io.sockets.emit('data', stream);
-//   });
-
-//   // When the connection closes, let us know
-//   conn.on("close", function (code, reason) {
-//       console.log("Connection closed")
-//   });
-// }).listen(port);
-
-// console.log('listening on port', port);
-
-
-
+// #########################################################################
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
