@@ -82,8 +82,43 @@ gHabilitate.prototype._moveBallOnCanvas = function(moveDirection) {
     }
   }
 
-  this.draw();
+  // If drawing here, the ball makes a zig-zag path across the screen because the x is set, draw happens, then the y is set.
+  // this.draw();
 };
+
+// Attempt to make ball drawing more smooth.
+// gHabilitate.prototype._moveBallOnCanvas = function(moveDirection) {
+//   // console.log('Moving: ' + moveDirection);
+//   var x_or_y = (moveDirection === 'Up' || moveDirection === 'Down') ? 'y' : 'x';
+//   if(moveDirection === 'Up' || moveDirection === 'Left') {
+//     // Move the ball up or left by subtracting the moveSensitivity from the axis.
+//     this._moveBall[x_or_y] -= 0.1; // Original: this._moveSensitivity;
+//     // Calculate the edge of the ball.
+//     var ballEdge = this._moveBall[x_or_y] - this._moveBall.radius;
+//     if(ballEdge <= this._borderPadding) {
+//       // Keep the ball from moving off the area (over the border);
+//       this._moveBall[x_or_y] = this._borderPadding + this._moveBall.radius;
+//       // console.log('Hit wall/edge: ' + moveDirection);
+//     }
+//   } else {
+//     // Move the ball down or right by adding the moveSensitivity to the axis.
+//     this._moveBall[x_or_y] += 0.1; // Original: this._moveSensitivity;
+//     // Calculate the edge of the ball.
+//     var ballEdge = this._moveBall[x_or_y] + this._moveBall.radius;
+
+//     // Calculate the wall;
+//     var edge = (((x_or_y === 'x') ? this._canvasWidth : this._canvasHeight) - (this._borderPadding * 2));
+
+//     if(ballEdge >= edge){
+//       // Keep the ball from moving off the area (over the border);
+//       this._moveBall[x_or_y] = edge - this._moveBall.radius;
+//       // console.log('Hit wall/edge: ' + moveDirection);
+//     }
+//   }
+
+//   // If drawing here, the ball makes a zig-zag path across the screen because the x is set, draw happens, then the y is set.
+//   // this.draw();
+// };
 
 gHabilitate.prototype.moveUp = function() {
   this._moveBallOnCanvas('Up');
@@ -138,6 +173,29 @@ gHabilitate.prototype._clear = function() {
   this._context.clearRect(0, 0, this._canvasWidth, this._canvasHeight);
 };
 
+// Attempt to make ball drawing more smooth.
+// gHabilitate.prototype.moveBall = function(currentCoordinates) {
+//   if(this._prevCoordinates === undefined) {
+//     this._prevCoordinates = currentCoordinates;
+//   }
+
+//   var newX = (+this._prevCoordinates.x) + (+currentCoordinates.x);
+//   var newY = (+this._prevCoordinates.y) + (+currentCoordinates.y);
+
+//   for(var i = 0, n = (this._moveSensitivity * 10); i < n; i++) {
+//     console.log('Drawing...')
+//     if(newY > 0) { this.moveUp(); }
+//     if(newY < 0) { this.moveDown(); }
+//     if(newX < 0) { this.moveLeft(); }
+//     if(newY > 0) { this.moveRight(); }
+//     this.draw();
+//   }
+
+//   // To avoid zig-zag, draw here.
+//   // this.draw();
+// };
+
+// Original.
 gHabilitate.prototype.moveBall = function(currentCoordinates) {
   if(this._prevCoordinates === undefined) {
     this._prevCoordinates = currentCoordinates;
@@ -150,6 +208,9 @@ gHabilitate.prototype.moveBall = function(currentCoordinates) {
   if(newY < 0) { this.moveDown(); }
   if(newX < 0) { this.moveLeft(); }
   if(newY > 0) { this.moveRight(); }
+
+  // To avoid zig-zag, draw here.
+  this.draw();
 };
 
 function Ball(x, y, radius, color) {
