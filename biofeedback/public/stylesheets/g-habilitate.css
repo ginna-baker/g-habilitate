@@ -5,7 +5,9 @@
   background-color: blue;
 }
 
-
+body {
+background-color: black;
+}
 /********************
 FROM NVD3:
  * HTML CSS
