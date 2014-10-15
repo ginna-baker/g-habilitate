@@ -1,41 +1,67 @@
-<!doctype html>
-<html>
-<head>
-<link rel="stylesheet" type="text/css" media="all" href="css/reset.css" /> <!-- reset css -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
-<!-- LINK TO LOCAL PROJECT? -->
-<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+    <title>gHabilitate</title>
 
-<link rel="stylesheet" type="text/css" href="stylesheets/g-habilitate.css">
-<script type="text/javascript" src="javascripts/g-habilitate.js"></script>
-<script src="/socket.io/socket.io.js"></script>
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/starter-template.css" rel="stylesheet">
+    <link href="stylesheets/g-habilitate.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header logo">
+          <img src="/images/g-habilitate-logo.png">
+        </div>
+      </div>
+    </div>
+
+    <div class="container center">
+
+      <div id="canvasContainer"></div>
+      <input id="moveSensitivitySlider" type="range" name="points" min="1" max="20" value="5">
+      <button id="resetGameButton" class="btn btn-success">RESET</button>
+
+    </div><!-- /.container -->
 
 
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="javascripts/jquery/1.11.1/jquery.min.js"></script>
+    <script src="javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="javascripts/g-habilitate.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      $( document ).ready(function() {
 
-<script>
-  $( document ).ready(function() {
-    console.log( "Document ready!" );
-    var ghabilitate = new gHabilitate('canvas', 1);
-    ghabilitate.init();
+        var ghabilitate = new gHabilitate('canvasContainer', 5, 5, 800, 600);
+        ghabilitate.init();
 
-    // $(function(){
-    var socket = io.connect();
-    socket.on('data', function (data) {
-      console.log(data);
-      var obj = JSON.parse(data);
-      ghabilitate.moveBall(obj);
-    });
-  });
+        $("#moveSensitivitySlider").on("input", function(){
+          ghabilitate.setMoveSensitivity(this.value);
+        });
 
-</script>
+        $("#resetGameButton").on('click', function() {
+          $("#canvasContainer").empty();
+          ghabilitate.init();
+        });
 
-</head>
+        var socket = io.connect();
+        socket.on('data', function (data) {
+          ghabilitate.moveBall(data);
+        });
 
-<body>
-  <div class="container">
-    <p></p>
-    <p></p>
-    <canvas id="canvas"></canvas>
-  </div>
-</body>
+      });
+    </script>
+  </body>
 </html>
