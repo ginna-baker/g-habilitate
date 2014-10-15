@@ -1,4 +1,4 @@
-function gHabilitate(canvasId, borderPadding, moveSensitivity) {
+function gHabilitate(canvasId, borderPadding, moveSensitivity, width, height) {
   this._canvasId = canvasId;
   this._borderPadding = borderPadding || 5;
   this._moveSensitivity = moveSensitivity || 1;
@@ -7,21 +7,53 @@ function gHabilitate(canvasId, borderPadding, moveSensitivity) {
   this._moveBall;
   this._targetBall;
   this._prevCoordinates;
+  this._canvasWidth = width;
+  this._canvasHeight = height;
+  this._moveBallSize = 25; // SET MOVEBALL SIZE HERE.
+  this._targetBallSize = 50; // SET TARGETBALL SIZE HERE.
 
   // TODO : Proof of concept.
   this._snake = false;
 }
 
+// <FUZZY LOOK FIX>
+// http://stackoverflow.com/questions/15661339/how-do-i-fix-blurry-text-in-my-html5-canvas
+function createHiDPICanvas(w, h, ratio) {
+    if (!ratio) { ratio = PIXEL_RATIO; }
+    var can = document.createElement("canvas");
+    can.width = w * ratio;
+    can.height = h * ratio;
+    can.style.width = w + "px";
+    can.style.height = h + "px";
+    can.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
+    return can;
+}
+
+var PIXEL_RATIO = (function () {
+    var ctx = document.createElement("canvas").getContext("2d"),
+        dpr = window.devicePixelRatio || 1,
+        bsr = ctx.webkitBackingStorePixelRatio ||
+              ctx.mozBackingStorePixelRatio ||
+              ctx.msBackingStorePixelRatio ||
+              ctx.oBackingStorePixelRatio ||
+              ctx.backingStorePixelRatio || 1;
+
+    return dpr / bsr;
+})();
+// </FUZZY LOOK FIX>
+
 gHabilitate.prototype.init = function() {
-  this._canvas = document.getElementById(this._canvasId);
+  // FUZZY LOOK FIX.
+  this._canvas = createHiDPICanvas(this._canvasWidth, this._canvasHeight);
+  $('#' +this._canvasId).append(this._canvas);
   this._canvasWidth = this._canvas.width;
   this._canvasHeight = this._canvas.height;
   this._context = this._canvas.getContext("2d");
 
   var midPointX = Math.round(this._canvasWidth / 2);
   var midPointY = Math.round(this._canvasHeight / 2);
-  this._moveBall = new Ball(midPointX, midPointY, 5, 'red'); // TODO: Hard coded values?
-  this._targetBall = new Ball(midPointX, midPointY, 10, 'green'); // TODO: Hard coded values?
+  this._moveBall = new Ball(midPointX, midPointY, 25, '#0B7CD8'); // Blueish. TODO: Hard coded values?
+  this._targetBall = new Ball(midPointX, midPointY, 50, '#D4D5D6'); // Grayish. TODO: Hard coded values?
 
   // Listen for when the user presses a key down
   var that = this;
@@ -33,7 +65,8 @@ gHabilitate.prototype.init = function() {
 };
 
 gHabilitate.prototype.setMoveSensitivity = function(newMoveSensitivity) {
-  this._moveSensitivity = newMoveSensitivity;
+  // + to convert to number.
+  this._moveSensitivity = +newMoveSensitivity;
 };
 
 gHabilitate.prototype.draw = function() {
@@ -68,13 +101,12 @@ gHabilitate.prototype._moveBallOnCanvas = function(moveDirection) {
     }
   } else {
     // Move the ball down or right by adding the moveSensitivity to the axis.
+    console.log(this._moveSensitivity);
     this._moveBall[x_or_y] += this._moveSensitivity;
     // Calculate the edge of the ball.
     var ballEdge = this._moveBall[x_or_y] + this._moveBall.radius;
-
     // Calculate the wall;
     var edge = (((x_or_y === 'x') ? this._canvasWidth : this._canvasHeight) - (this._borderPadding * 2));
-
     if(ballEdge >= edge){
       // Keep the ball from moving off the area (over the border);
       this._moveBall[x_or_y] = edge - this._moveBall.radius;
@@ -85,40 +117,6 @@ gHabilitate.prototype._moveBallOnCanvas = function(moveDirection) {
   // If drawing here, the ball makes a zig-zag path across the screen because the x is set, draw happens, then the y is set.
   // this.draw();
 };
-
-// Attempt to make ball drawing more smooth.
-// gHabilitate.prototype._moveBallOnCanvas = function(moveDirection) {
-//   // console.log('Moving: ' + moveDirection);
-//   var x_or_y = (moveDirection === 'Up' || moveDirection === 'Down') ? 'y' : 'x';
-//   if(moveDirection === 'Up' || moveDirection === 'Left') {
-//     // Move the ball up or left by subtracting the moveSensitivity from the axis.
-//     this._moveBall[x_or_y] -= 0.1; // Original: this._moveSensitivity;
-//     // Calculate the edge of the ball.
-//     var ballEdge = this._moveBall[x_or_y] - this._moveBall.radius;
-//     if(ballEdge <= this._borderPadding) {
-//       // Keep the ball from moving off the area (over the border);
-//       this._moveBall[x_or_y] = this._borderPadding + this._moveBall.radius;
-//       // console.log('Hit wall/edge: ' + moveDirection);
-//     }
-//   } else {
-//     // Move the ball down or right by adding the moveSensitivity to the axis.
-//     this._moveBall[x_or_y] += 0.1; // Original: this._moveSensitivity;
-//     // Calculate the edge of the ball.
-//     var ballEdge = this._moveBall[x_or_y] + this._moveBall.radius;
-
-//     // Calculate the wall;
-//     var edge = (((x_or_y === 'x') ? this._canvasWidth : this._canvasHeight) - (this._borderPadding * 2));
-
-//     if(ballEdge >= edge){
-//       // Keep the ball from moving off the area (over the border);
-//       this._moveBall[x_or_y] = edge - this._moveBall.radius;
-//       // console.log('Hit wall/edge: ' + moveDirection);
-//     }
-//   }
-
-//   // If drawing here, the ball makes a zig-zag path across the screen because the x is set, draw happens, then the y is set.
-//   // this.draw();
-// };
 
 gHabilitate.prototype.moveUp = function() {
   this._moveBallOnCanvas('Up');
@@ -150,6 +148,7 @@ gHabilitate.prototype._keyDownHandler = function(event) {
       return; // Quit without doing anything else. (e.g. draw)
     break;
   }
+  this.draw();
 };
 
 gHabilitate.prototype._drawWalls = function() {
@@ -172,28 +171,6 @@ gHabilitate.prototype._drawBall = function(ball) {
 gHabilitate.prototype._clear = function() {
   this._context.clearRect(0, 0, this._canvasWidth, this._canvasHeight);
 };
-
-// Attempt to make ball drawing more smooth.
-// gHabilitate.prototype.moveBall = function(currentCoordinates) {
-//   if(this._prevCoordinates === undefined) {
-//     this._prevCoordinates = currentCoordinates;
-//   }
-
-//   var newX = (+this._prevCoordinates.x) + (+currentCoordinates.x);
-//   var newY = (+this._prevCoordinates.y) + (+currentCoordinates.y);
-
-//   for(var i = 0, n = (this._moveSensitivity * 10); i < n; i++) {
-//     console.log('Drawing...')
-//     if(newY > 0) { this.moveUp(); }
-//     if(newY < 0) { this.moveDown(); }
-//     if(newX < 0) { this.moveLeft(); }
-//     if(newY > 0) { this.moveRight(); }
-//     this.draw();
-//   }
-
-//   // To avoid zig-zag, draw here.
-//   // this.draw();
-// };
 
 // Original.
 gHabilitate.prototype.moveBall = function(currentCoordinates) {

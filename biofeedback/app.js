@@ -24,7 +24,6 @@ var server = net.createServer(function(socket) {
     // Test for situations where two data objects arrive at the same time.
     var arr = data.toString().split('}{');
     var newObj = JSON.parse(arr[0] + (arr.length > 1 ? '}' : ''));
-    console.log(newObj);
     io.sockets.emit('data', newObj);
   });
 });
