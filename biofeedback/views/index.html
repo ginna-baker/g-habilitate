@@ -1,41 +1,60 @@
 <!doctype html>
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" /> <!-- reset css -->
+  <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+  <link href="stylesheets/starter-template.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="stylesheets/g-habilitate.css"/>
-<!-- LINK TO LOCAL PROJECT? -->
-  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-  <script type="text/javascript" src="nv.d3.js"</script>
-  <script type="text/javascript" src="javascripts/lineChart.js"></script>
+  <script type="text/javascript" src="/javascripts/jquery/1.11.1/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="./../d3.v3.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="./../nv.d3.js"</script>
+  <script type="text/javascript" src="/javascripts/lineChart.js"></script>-->
 
   <script type="text/javascript" src="javascripts/g-habilitate.js"></script>
   <script src="/socket.io/socket.io.js"></script>
-
-<script>
-  $( document ).ready(function() {
-    console.log( "Document ready!" );
-    var ghabilitate = new gHabilitate('canvas', 1);
-    ghabilitate.init();
-
-    // $(function(){
-    var socket = io.connect();
-    socket.on('data', function (data) {
-      console.log(data);
-      var obj = JSON.parse(data);
-      ghabilitate.moveBall(obj);
-    });
-  });
-
-</script>
+  <script src="/javascripts/testdata.js"></script>
 
 </head>
 
 <body>
-  <div class="container">
-    <p>test test</p>
-    <p></p>
-    <canvas id="canvas"></canvas>
-  </div>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header logo">
+          <img src="/images/g-habilitate-logo.png">
+        </div>
+      </div>
+    </div>
+
+    <div class="container center">
+
+          <div id="canvasContainer"></div>
+          <input id="moveSensitivitySlider" type="range" name="points" min="1" max="20" value="5">
+          <button id="resetGameButton" class="btn btn-success">RESET</button>
+
+    </div><!-- /.container -->
+
+<script>
+      $( document ).ready(function() {
+
+        var ghabilitate = new gHabilitate('canvasContainer', 5, 5, 800, 600);
+        ghabilitate.init();
+
+        $("#moveSensitivitySlider").on("input", function(){
+          ghabilitate.setMoveSensitivity(this.value);
+        });
+
+        $("#resetGameButton").on('click', function() {
+          $("#canvasContainer").empty();
+          ghabilitate.init();
+        });
+
+        var socket = io.connect();
+        socket.on('data', function (data) {
+          ghabilitate.moveBall(data);
+        });
+
+      });
+</script>
+
 </body>
 </html>

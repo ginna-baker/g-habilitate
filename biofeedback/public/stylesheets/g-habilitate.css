@@ -1,12 +1,21 @@
-/*#canvas {
-  border:1px solid red;
-  width: 500px;
-  height: 500px;
-  background-color: blue;
+.logo img {
+  height: 50px;
 }
 
+.logo {
+  width: 100%;
+  text-align: center;
+}
+.center {
+  text-align: center;
+}
 body {
-background-color: black;
+  background-color: black;
+}
+
+.btn-success {
+  background-color: #cc4125;
+  border-color: #cc4125;
 }
 /********************
 FROM NVD3:
