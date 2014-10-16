@@ -38,7 +38,7 @@ Instructions for Developer Use:
 
 3. In bash, go to /tessel and type 'tessel push tesselGHabilitate.js'.
 
-4. Press the reset button on your tessel. Ensure that your tessel connects to the computer by watching for a solid orange light (wifi connect) and a bash message ("connected").
+4. Press the reset button on your tessel. Ensure that your tessel connects to the computer by watching for a solid orange light (wifi connect) and a bash message ("TESSEL! Connected to TM-00-04-f000da30-005f433e-201c2586.").
 
 5. In bash, go to /biofeedback and type 'npm start'.  Point your browser to localhost:3000. You should see x and y values begin to print in the bash console.  (If not, try hitting reset on the tessel again.)
 

@@ -3,7 +3,7 @@ var accel = require('accel-mma84').use(tessel.port['A']);
 var net = require('net');
 var client = new net.Socket();
 
-var IP = '172.20.10.7';
+var IP = '172.20.10.7';  //enter computer's IP address here
 var PORT = 7999;
 
 console.log('Tessel starting up.')
